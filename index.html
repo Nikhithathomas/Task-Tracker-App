@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker App</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</head>
+<body class="bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Task Tracker App</h2>
+        <div class="card p-2 shadow mb-4">
+            <input type="text" id="title" class="form-control " placeholder="enter the title">
+            <input type="text" id="description" class="form-control" placeholder="enter the...">
+            <button class="btn btn-primary " onclick="addTask()">Add Task</button>
+
+        </div>
+        <div class="card p-2 shadow">
+         <h4>Task List</h4>
+
+        <div id="taskContainer"></div>
+        </div>
+    </div>
+    <script>
+       let taskList = JSON.parse(sessionStorage.getItem("tasks")) || [];
+
+    
+    function displayTasks() {
+
+        let result = "";
+        for(let i=0;i<taskList.length;i++){
+             result += `
+            <div class="card p-3 ">
+                <h5>${taskList[i].title}</h5>
+                <p>${taskList[i].description}</P>
+                    <p>Status: ${taskList[i].status}</p>
+                    <div class="mt-3">
+                        <button class="btn btn-primary " onclick="completeTask(${i})">
+                            Complete
+                        </button>
+                    <button class="btn btn-primary "  onclick="editTask(${i})">
+                            Edit
+                        </button>
+                    <button class="btn btn-danger btn-sm"onclick="deleteTask(${i})">
+                            Delete
+                        </button>
+            </div>
+               </div>
+            `;
+        }
+
+        document.getElementById("taskContainer").innerHTML = result;
+    }
+       
+      function addTask() {
+        let title = document.getElementById("title").value;
+       let description = document.getElementById("description").value;
+       if (title == "" || description == "") {
+            alert(" enter title and description");
+            return;
+        }
+        let task = {
+            title:title,
+            description:description,
+            status:"pending"
+        } ;
+       
+         taskList.push(task);
+        sessionStorage.setItem("tasks", JSON.stringify(taskList));
+
+        alert("Task added");
+        displayTasks();
+    }
+   function completeTasks(index) {
+
+        taskList[index].status = "Complete";
+
+        sessionStorage.setItem("tasks", JSON.stringify(taskList));
+
+        alert("task successfully completed");
+
+        displayTasks();
+    }
+    function editTask(index){
+        let title = prompt("enter new title");
+        let description = prompt("enter new description");
+        taskList[index].title = title;
+          taskList[index].description = description;
+          sessionStorage.setItem("tasks",JSON.stringify(taskList));
+          alert("task added");
+          displayTasks();
+    }
+     
+    
+    function deleteTasks(index)
+    {
+        taskList.splice(index,1);
+        sessionStorage.setItem("task",JSON.stringify(taskList));
+        alert("task delete");
+        displayTasks();
+    }
+     displayTasks();
+   
+
+    </script>
+</body>
+</html>
+
+                    
+
+
+       
+
+
+   
